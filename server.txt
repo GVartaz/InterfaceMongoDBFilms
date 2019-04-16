@@ -1,0 +1,63 @@
+var express = require('express'); //charge le module express
+var app = express();
+var mongoose = require('mongoose'); // charge le module mongoose
+var morgan = require('morgan'); //charge le module morgan
+var bodyParser = require('body-parser'); //charge le module bodyParser
+
+app.use(express.static(__dirname + '/public'));
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({'extended':'true'}));
+app.use(bodyParser.json());
+app.use(bodyParser.json({type: 'application/vnd.api+json'}));
+
+mongoose.connect('mongodb://localhost/ListeaFaire', { //établit une connexion entre le projet et mongoDB
+    useNewUrlParser: true });
+
+var Liste = mongoose.model('Liste', { //créé un objet Liste avec un constructeur
+    text : String
+});
+
+
+app.get('/',function(req,res) {
+    res.sendFile('./public/index.html'); //créé une route qui sera appellé si il y a une requête GET sur le fichier index.html
+});
+
+app.get('/api/laliste',function(req,res){ //créé une route GET qui si elle est appelé retourne le contenu de l'objet Liste parsé en json. Sinon il renvoit le message d'erreur associé
+    Liste.find(function(err,laliste) {
+        if(err)
+            res.send(err);
+        res.json(laliste);
+    });
+});
+
+app.post('/api/laliste',function(req,res) { //créé une route GET qui si elle est appelé créé un nouvel objet Listeretourne le contenu de l'objet Liste parsé en json. Sinon il renvoit le message d'erreur associé
+    Liste.create({
+        text : req.body.text,
+        done : false
+    }, function(err,liste) {
+        if (err)
+            res.send(err);
+        Liste.find(function(err,laliste) {
+            if(err)
+                res.send(err);
+            res.json(laliste);
+        });
+    });
+});
+
+app.delete('/api/laliste/:liste_id',function(req,res){ //route avec comme paramètre l'id d'une liste, qui si elle est appellé supprime cette liste et renvoie le contneu de la nouvelle
+    Liste.deleteOne({
+        _id : req.params.liste_id
+    }, function(err,liste) {
+        if (err)
+            res.send(err);
+        Liste.find(function(err,laliste){
+            if (err)
+                res.send(err)
+            res.json(laliste);
+        });
+    });
+});
+
+app.listen(8080); //on fait écouter l'app sur le port 8080
+console.log("on utilise le port: 8080"); // on afficher sur la console

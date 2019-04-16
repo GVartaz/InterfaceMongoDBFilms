@@ -1,0 +1,36 @@
+body{
+    margin-left : 10px;
+}
+
+center{
+    padding-top: 20px;
+}
+
+#film-list{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#actors{
+    display: inline;
+}
+
+#nbResults{
+    padding: 1%;
+}
+
+table, th , td  {
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+td{
+    width: 90%;
+}
+
+table tr:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+  table tr:nth-child(even) {
+    background-color: #ffffff;
+}

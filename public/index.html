@@ -1,0 +1,65 @@
+<!doctype html>
+<html ng-app="ListeFilms">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Liste de films cultes</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+        <script src="index.js"></script>
+        <link href="style.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body ng-controller="mainController">
+        <center>
+            <h1>Liste des films</h1>
+        </center>
+        Rechercher un film :
+        <p> Genre :  
+            <select id="film-genre">
+                <option value="">Tous</option>
+                <option ng-repeat="f in film | unique: 'genre' | orderBy:'+genre'" value="{{f.genre}}">{{f.genre}}</option>
+            </select>
+            Année : 
+            <select id="film-year">
+                <option value="">Tous</option>
+                <option ng-repeat="f in film | unique: 'year' | orderBy:'+year'" value="{{f.year}}">{{f.year}}</option>
+            </select>
+            Pays : 
+            <select id="film-country">
+                <option value="">Tous</option>
+                <option ng-repeat="f in film | unique: 'country' | orderBy:'+country'" value="{{f.country}}">{{f.country}}</option>
+            </select>
+        </p>
+
+        <button class="btn btn-primary" ng-click="search()">Rechercher</button>
+        <button class="btn btn-secondary" ng-click="raz()">Liste de base</button>
+        
+        <p id="nbResults"> 
+            Nombre de résultats: {{film.length}}
+        </p>
+        <div id="film-list">
+            <table>
+                <tr ng-repeat="f in film">
+                    <td>
+                        <h5> {{ f.title }} - {{ f.genre }} <i> {{ f.year }} ({{ f.country }})</i> </h5>
+                        {{ f.summary }} 
+                        <p>
+                            <div id="director">
+                                <i>réalisé par </i><b>{{ f.director[0].first_name }}  {{f.director[0].last_name}}</b>
+                            </div>
+                            <i>Acteurs principaux</i> : 
+                            <div id="actors" ng-repeat="a in f.actors">
+                                <b>{{a.first_name}} {{a.last_name}}, </b>
+                            </div>
+                        </p>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="delete(f._id)">Supprimer</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
